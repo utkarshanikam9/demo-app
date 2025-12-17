@@ -25,6 +25,7 @@ const drawerWidth = 280;
 const collapsedWidth = 64;
 
 const navigationItems = [
+//   { text: 'Slide', icon: <ChevronRightIcon /> },
   { text: 'KPI Chart', icon: <BarChartIcon /> },
   { text: 'Notifications', icon: <NotificationsIcon /> },
   { text: 'Feedback', icon: <FeedbackIcon /> },
@@ -69,8 +70,9 @@ export default function SideNav({ children }) {
         <Box sx={{ 
           p: collapsed ? 1.5 : 3, 
           display: 'flex', 
+          flexDirection: collapsed ? 'column' : 'row',
           alignItems: 'center', 
-          gap: 2,
+          gap: collapsed ? 1 : 2,
           borderBottom: '1px solid #e9ecef',
           height: '72px',
           boxSizing: 'border-box'
@@ -80,19 +82,12 @@ export default function SideNav({ children }) {
               <Box sx={{ 
                 width: 32, 
                 height: 32, 
-                backgroundColor: '#ff6b35',
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Typography sx={{ 
-                  color: 'white', 
-                  fontWeight: 'bold', 
-                  fontSize: '14px'
-                }}>
-                  R
-                </Typography>
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.7619 20.7792L31.1429 10.3896L20.7619 0H10.381V10.3896H20.7619V20.7792Z" fill="#FF7633"></path><path d="M0 20.7793V31.1689H10.381V20.7793V10.3896L0 20.7793Z" fill="#FF7633"></path><path d="M10.381 20.7793L20.7619 31.1689H31.1429V20.7793H20.7619H10.381Z" fill="#FF7633"></path></svg>
               </Box>
               <Typography variant="h6" sx={{ 
                 fontWeight: 'bold',
@@ -101,9 +96,7 @@ export default function SideNav({ children }) {
               }}>
                 RALLIANT
               </Typography>
-            </>
-          )}
-          <IconButton 
+                      <IconButton 
             onClick={handleToggle}
             size="small" 
             sx={{ 
@@ -115,13 +108,59 @@ export default function SideNav({ children }) {
               }
             }}
           >
-            {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            <ChevronLeftIcon />
           </IconButton>
+            </>
+          )}
+          
+          {collapsed && (
+            <Box sx={{ 
+              width: 32, 
+              height: 32, 
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.7619 20.7792L31.1429 10.3896L20.7619 0H10.381V10.3896H20.7619V20.7792Z" fill="#FF7633"></path><path d="M0 20.7793V31.1689H10.381V20.7793V10.3896L0 20.7793Z" fill="#FF7633"></path><path d="M10.381 20.7793L20.7619 31.1689H31.1429V20.7793H20.7619H10.381Z" fill="#FF7633"></path></svg>
+            </Box>
+          )}
         </Box>
 
         {/* Main Navigation */}
         <Box sx={{ flexGrow: 1, pt: 2 }}>
           <List sx={{ px: collapsed ? 1 : 2 }}>
+                       <IconButton 
+            onClick={handleToggle}
+            size="small" 
+            sx={{ 
+             display:!collapsed ? 'none' : 'flex',
+              ml: collapsed ? 0.8 : 'auto',
+              color: '#6c757d',
+              backgroundColor: 'rgba(108, 117, 125, 0.1)',
+              '&:hover': {
+                backgroundColor: 'rgba(108, 117, 125, 0.2)',   
+              },
+
+                    mb: 0.5,
+                    justifyContent: collapsed ? 'center' : 'flex-start',
+                    '&:hover': {
+                      backgroundColor: '#e9ecef',
+                    },
+                    '& .MuiListItemIcon-root': {
+                      minWidth: collapsed ? 'auto' : '40px',
+                      color: '#6c757d',
+                      justifyContent: 'center'
+                    },
+                    '& .MuiListItemText-primary': {
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#495057',
+                    }
+            }}
+          >
+            <ChevronRightIcon /> 
+          </IconButton>
             {navigationItems.map((item) => (
               <Tooltip 
                 key={item.text}

@@ -12,20 +12,23 @@ import {
   Chip,
   IconButton,
   Tab,
-  Tabs
+  Tabs,
+  Divider
 } from '@mui/material';
 import {
   KeyboardArrowDown,
   Visibility,
   VideoCall,
   GetApp,
-  CheckCircle
+  CheckCircle,
+  Launch
 } from '@mui/icons-material';
 
 export default function TopNav() {
   const [tabValue, setTabValue] = React.useState(0);
-  const [kpiOwner, setKpiOwner] = React.useState('Sarah Johnson');
-  const [pnpOwner, setPnpOwner] = React.useState('John Doe');
+  const [gemsOwner, setGemsOwner] = React.useState('GEMS SETHA');
+  const [year, setYear] = React.useState('2025');
+  const [pspOwner, setPspOwner] = React.useState('John Doe');
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -42,173 +45,220 @@ export default function TopNav() {
           borderBottom: '1px solid #e9ecef'
         }}
       >
-        <Toolbar sx={{ justifyContent: 'space-between', minHeight: '64px' }}>
-          {/* Left Section - Logo and Title */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{ 
-                width: 32, 
-                height: 32, 
-                backgroundColor: '#ff6b35',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Typography sx={{ 
-                  color: 'white', 
-                  fontWeight: 'bold', 
-                  fontSize: '14px'
-                }}>
-                  R
-                </Typography>
-              </Box>
-              <Typography variant="h6" sx={{ 
-                fontWeight: 'bold',
-                color: '#2c3e50',
-                fontSize: '18px'
-              }}>
-                RALLIANT
-              </Typography>
-            </Box>
-            
-            <Typography variant="h5" sx={{ 
+      <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center', minHeight: '80px', px: 3 }}>
+          {/* Left Section - Title and Status */}
+          <Box sx={{ display: 'flex', alignSelf: 'start',flexDirection: 'column', mt: 1 ,gap:1}}>
+          <Box sx={{display:'flex',gap:2}}>
+
+            <Typography variant="h4" sx={{ 
               fontWeight: '600',
               color: '#2c3e50',
-              ml: 2
+              fontSize: '22px'
             }}>
               Customer Resolution Time
             </Typography>
+            <Divider orientation="vertical" flexItem sx={{gap:10}}/>
             
-            {/* Status Chips */}
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Chip 
-                label="SALES OPS" 
-                size="small" 
-                sx={{ 
-                  backgroundColor: '#e3f2fd',
-                  color: '#1976d2',
-                  fontWeight: '500'
-                }} 
-              />
-              <Chip 
-                label="GEMS BETA" 
-                size="small" 
-                sx={{ 
-                  backgroundColor: '#fff3e0',
-                  color: '#f57c00',
-                  fontWeight: '500'
-                }} 
-              />
+            <Chip 
+              label="SALES OPS" 
+              size="small" 
+              sx={{ 
+                backgroundColor: '#627d91ff',
+                color: '#ffffff',
+                fontWeight: '600',
+                fontSize: '11px',
+                height: '24px'
+              }} 
+            />
+            
+            <FormControl size="small" sx={{ minWidth: 140 }}>
               <Select
-                size="small"
-                defaultValue="2025"
-                sx={{ minWidth: 80, height: 32 }}
+                value={gemsOwner}
+                onChange={(e) => setGemsOwner(e.target.value)}
+                sx={{ 
+                  height: 24,
+                  backgroundColor: '#b1d5f1ff',
+                  color: '#294a76ff',
+                  outlineColor: '#1275f8ff',
+                  borderRadius: '24px' ,
+                  fontSize: '14px',
+                  '& .MuiSelect-select': {
+                    py: '6px'
+                  }
+                }}
+                IconComponent={KeyboardArrowDown}
+              >
+                <MenuItem value="GEMS SETHA">GEMS SETHA</MenuItem>
+                <MenuItem value="GEMS BETA">GEMS BETA</MenuItem>
+                <MenuItem value="GEMS ALPHA">GEMS ALPHA</MenuItem>
+              </Select>
+            </FormControl>
+            
+            <FormControl size="small" sx={{ minWidth: 80 }}>
+              <Select
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                sx={{ 
+                  height: 24,
+                  backgroundColor: '#c2ced8ff',
+                  color: 'black',
+                  borderRadius: '24px' ,
+                  fontSize: '14px',
+                  '& .MuiSelect-select': {
+                    py: '6px'
+                  }
+                }}
+                IconComponent={KeyboardArrowDown}
               >
                 <MenuItem value="2025">2025</MenuItem>
                 <MenuItem value="2024">2024</MenuItem>
+                <MenuItem value="2023">2023</MenuItem>
               </Select>
-            </Box>
+            </FormControl>
           </Box>
 
-          {/* Right Section - Buttons */}
+        <Box sx={{ display: 'flex'}}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Typography sx={{ 
+              fontSize: '14px',
+              color: '#495057',
+              fontWeight: '500'
+            }}>
+              KPI Owner : Sarah Johnson
+            </Typography>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ 
+                fontSize: '14px',
+                color: '#495057',
+                fontWeight: '500'
+              }}>
+                PSP Owner :
+              </Typography>
+              <FormControl size="small" sx={{ minWidth: 120 }}>
+                <Select
+                  value={pspOwner}
+                  onChange={(e) => setPspOwner(e.target.value)}
+                  sx={{ 
+                    height: 28,
+                    fontSize: '14px',
+                    '& .MuiSelect-select': {
+                      py: '4px'
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none'
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid #ccc'
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid #ff6b35'
+                    }
+                  }}
+                  IconComponent={KeyboardArrowDown}
+                >
+                  <MenuItem value="John Doe">John Doe</MenuItem>
+                  <MenuItem value="Sarah Johnson">Sarah Johnson</MenuItem>
+                  <MenuItem value="Mike Wilson">Mike Wilson</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+        </Box>
+          </Box>
+
+          {/* Right Section - Links */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Button
-              startIcon={<Visibility />}
-              variant="outlined"
+              endIcon={<Launch sx={{ fontSize: '16px !important' }} />}
+              variant="text"
               size="small"
               sx={{ 
-                borderColor: '#ff6b35',
                 color: '#ff6b35',
+                textTransform: 'none',
+                fontWeight: '500',
+                fontSize: '14px',
                 '&:hover': {
-                  backgroundColor: '#fff3e0',
-                  borderColor: '#ff6b35'
+                  backgroundColor: '#fff3e0'
                 }
               }}
             >
               View KPI Summary
             </Button>
             <Button
-              startIcon={<VideoCall />}
-              variant="outlined"
+              endIcon={<Launch sx={{ fontSize: '16px !important' }} />}
+              variant="text"
               size="small"
               sx={{ 
-                borderColor: '#ff6b35',
                 color: '#ff6b35',
+                textTransform: 'none',
+                fontWeight: '500',
+                fontSize: '14px',
                 '&:hover': {
-                  backgroundColor: '#fff3e0',
-                  borderColor: '#ff6b35'
+                  backgroundColor: '#fff3e0'
                 }
               }}
             >
-              View Cadence Meeting
+              View Cadence Meetings
             </Button>
           </Box>
+          
         </Toolbar>
 
-        {/* Second Row - Owner Information and Actions */}
-        <Toolbar sx={{ 
+        {/* Second Row - Owner Information */}
+        {/* <Toolbar sx={{ 
           backgroundColor: '#f8f9fa',
           minHeight: '48px !important',
-          borderTop: '1px solid #e9ecef'
+          borderTop: '1px solid #e9ecef',
+          px: 3
         }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 4, flexGrow: 1 }}>
-            {/* Owner Selects */}
-            <Box sx={{ display: 'flex', gap: 3 }}>
-              <FormControl size="small" sx={{ minWidth: 150 }}>
-                <InputLabel>KPI Owner</InputLabel>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Typography sx={{ 
+              fontSize: '14px',
+              color: '#495057',
+              fontWeight: '500'
+            }}>
+              KPI Owner : Sarah Johnson
+            </Typography>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ 
+                fontSize: '14px',
+                color: '#495057',
+                fontWeight: '500'
+              }}>
+                PSP Owner :
+              </Typography>
+              <FormControl size="small" sx={{ minWidth: 120 }}>
                 <Select
-                  value={kpiOwner}
-                  onChange={(e) => setKpiOwner(e.target.value)}
-                  label="KPI Owner"
+                  value={pspOwner}
+                  onChange={(e) => setPspOwner(e.target.value)}
+                  sx={{ 
+                    height: 28,
+                    fontSize: '14px',
+                    '& .MuiSelect-select': {
+                      py: '4px'
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none'
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid #ccc'
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid #ff6b35'
+                    }
+                  }}
+                  IconComponent={KeyboardArrowDown}
                 >
-                  <MenuItem value="Sarah Johnson">Sarah Johnson</MenuItem>
                   <MenuItem value="John Doe">John Doe</MenuItem>
+                  <MenuItem value="Sarah Johnson">Sarah Johnson</MenuItem>
+                  <MenuItem value="Mike Wilson">Mike Wilson</MenuItem>
                 </Select>
               </FormControl>
-              
-              <FormControl size="small" sx={{ minWidth: 150 }}>
-                <InputLabel>P&P Owner</InputLabel>
-                <Select
-                  value={pnpOwner}
-                  onChange={(e) => setPnpOwner(e.target.value)}
-                  label="P&P Owner"
-                >
-                  <MenuItem value="John Doe">John Doe</MenuItem>
-                  <MenuItem value="Sarah Johnson">Sarah Johnson</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
-            {/* Action Buttons */}
-            <Box sx={{ display: 'flex', gap: 2, ml: 'auto' }}>
-              <Button
-                startIcon={<CheckCircle />}
-                variant="contained"
-                size="small"
-                sx={{ 
-                  backgroundColor: '#28a745',
-                  '&:hover': {
-                    backgroundColor: '#218838'
-                  }
-                }}
-              >
-                P&P Approval
-              </Button>
-              <Button
-                startIcon={<GetApp />}
-                variant="outlined"
-                size="small"
-                sx={{ 
-                  borderColor: '#6c757d',
-                  color: '#6c757d'
-                }}
-              >
-                Generate Report
-              </Button>
             </Box>
           </Box>
-        </Toolbar>
+        </Toolbar> */}
       </AppBar>
 
       {/* Analysis Tabs */}
