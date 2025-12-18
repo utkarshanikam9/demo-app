@@ -16,7 +16,11 @@ import {
   TextField,
   Divider,
   Avatar,
-  Drawer
+  Drawer,
+  Stepper,
+  Step,
+  StepLabel,
+  StepButton
 } from '@mui/material';
 import {
   Close,
@@ -26,25 +30,131 @@ import {
   Send
 } from '@mui/icons-material';
 
+// Import step components
+import Step1DefineProblem from './steps/Step1DefineProblem';
+import Step2RunChart from './steps/Step2RunChart';
+import Step3Level1Pareto from './steps/Step3Level1Pareto';
+import {
+  Step4Level2Pareto,
+  Step5CausalChain,
+  Step6Countermeasures,
+  Step7Sustainability
+} from './steps/RemainingSteps';
+
 export default function MainContent() {
   const [selectedOption, setSelectedOption] = React.useState('');
   const [responseText, setResponseText] = React.useState('');
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [currentStep, setCurrentStep] = React.useState(1);
+
+  // Step configuration
+  const steps = [
+    { label: 'Define Problem', component: Step1DefineProblem },
+    { label: 'Run Chart Analysis', component: Step2RunChart },
+    { label: 'Level 1 Pareto', component: Step3Level1Pareto },
+    { label: 'Level 2 Pareto', component: Step4Level2Pareto },
+    { label: 'Causal Chain', component: Step5CausalChain },
+    { label: 'Countermeasures', component: Step6Countermeasures },
+    { label: 'Sustainability', component: Step7Sustainability },
+  ];
+
+  // Handle step click
+  const handleStepClick = (stepIndex) => {
+    setCurrentStep(stepIndex + 1);
+  };
+
+  // Render current step content
+  const renderCurrentStep = () => {
+    const CurrentStepComponent = steps[currentStep - 1]?.component;
+
+    if (!CurrentStepComponent) {
+      return (
+        <Card sx={{ p: 3 }}>
+          <Typography variant="h6" color="error">
+            Step {currentStep} component not found
+          </Typography>
+        </Card>
+      );
+    }
+
+    // Pass props only to Step 1 (which needs them)
+    if (currentStep === 1) {
+      return (
+        <CurrentStepComponent
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          responseText={responseText}
+          setResponseText={setResponseText}
+        />
+      );
+    }
+
+    return <CurrentStepComponent />;
+  };
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', overflow: 'hidden' }}>
       {/* Main Content Area */}
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           flex: 1,
-          p: 3, 
-          backgroundColor: '#f8f9fa', 
+          p: 3,
+          backgroundColor: '#f8f9fa',
           minHeight: '100vh',
           transition: 'margin-right 0.3s ease',
           marginRight: isDrawerOpen ? '400px' : '0px',
           overflow: 'auto'
         }}
       >
+        {/* Stepper Navigation */}
+        <Card sx={{ mb: 3, p: 2 }}>
+          <Typography variant="h6" sx={{ mb: 2, color: '#2c3e50' }}>
+            KPI Analysis Workflow
+          </Typography>
+          <Stepper
+            activeStep={currentStep - 1}
+            nonLinear
+            alternativeLabel
+            sx={{
+              '& .MuiStepLabel-root': {
+                cursor: 'pointer',
+              },
+              '& .MuiStepIcon-root.Mui-active': {
+                color: '#ff6b35',
+              },
+              '& .MuiStepIcon-root.Mui-completed': {
+                color: '#ff6b35',
+              },
+              '& .MuiStepButton-root': {
+                padding: '24px 8px',
+              },
+            }}
+          >
+            {steps.map((step, index) => (
+              <Step key={index} completed={index < currentStep - 1}>
+                <StepButton
+                  onClick={() => handleStepClick(index)}
+                  sx={{
+                    '& .MuiStepLabel-label': {
+                      fontSize: '0.875rem',
+                      '&.Mui-active': {
+                        color: '#ff6b35',
+                        fontWeight: 'bold',
+                      },
+                    },
+                  }}
+                >
+                  {step.label}
+                </StepButton>
+              </Step>
+            ))}
+          </Stepper>
+        </Card>
+
+        {/* Dynamic Step Content */}
+        {renderCurrentStep()}
+
+        {/* Floating ARBY Button */}
         <Box
           onClick={() => setIsDrawerOpen(true)}
           sx={{
@@ -65,7 +175,6 @@ export default function MainContent() {
             '&:hover': {
               transform: 'scale(1.1)',
             },
-            // border: '3px solid #ff6b35',
           }}
         >
           <Box
@@ -80,248 +189,6 @@ export default function MainContent() {
             }}
           />
         </Box>
-      {/* ABBY AI Assistant Card */}
-      <Card
-        sx={{
-          mb: 3,
-          border: '2px solid #ff6b35',
-          borderRadius: '12px',
-          overflow: 'visible'
-        }}
-      >
-        {/* Header */}
-        <Box sx={{
-          backgroundColor: '#ff6b35',
-          color: 'white',
-          p: 2,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-          position: 'relative'
-        }}>
-          <Box sx={{
-            width: 40,
-            height: 40,
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            <SmartToy sx={{ color: 'white' }} />
-          </Box>
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-              ABBY
-            </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.9 }}>
-              AI ANALYTICS ASSISTANT
-            </Typography>
-          </Box>
-          <IconButton
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              color: 'white',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.1)'
-              }
-            }}
-          >
-            <Close />
-          </IconButton>
-        </Box>
-
-        <CardContent sx={{ p: 3 }}>
-          {/* Question */}
-          <Typography variant="body1" sx={{ mb: 2, color: '#495057' }}>
-            Hi I am ABBY, your AI assistant! How can I help you?
-          </Typography>
-
-          {/* Alert Box */}
-          <Alert
-            severity="warning"
-            sx={{
-              mb: 3,
-              backgroundColor: '#ff6b35',
-              color: 'white',
-              '& .MuiAlert-icon': {
-                color: 'white'
-              }
-            }}
-          >
-            Let's figure out the problem at the Statement facility
-          </Alert>
-
-          {/* Description */}
-          <Typography variant="body2" sx={{ mb: 2, color: '#6c757d' }}>
-            Based on the KPI data and the validation reasoning framework, here is what I have found:
-          </Typography>
-
-          {/* User Info */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-            <Avatar sx={{ width: 32, height: 32, backgroundColor: '#6c757d' }}>
-              <Typography variant="body2" sx={{ color: 'white' }}>
-                DS
-              </Typography>
-            </Avatar>
-            <Box>
-              <Typography variant="body2" sx={{ fontWeight: '500' }}>
-                Defect Rate increased by 4%
-              </Typography>
-              <Typography variant="caption" sx={{ color: '#6c757d' }}>
-                As on Wed, 30 Apr 2025
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Problem Description */}
-          <Typography variant="body2" sx={{ mb: 2, color: '#495057' }}>
-            The defect rate increase appears to be related to machinery that
-            likely due to a combination of insufficient equipment and insufficient training. Further
-            Investigation is recommended.
-          </Typography>
-
-          {/* Radio Options */}
-          <RadioGroup
-            value={selectedOption}
-            onChange={(e) => setSelectedOption(e.target.value)}
-            sx={{ mb: 2 }}
-          >
-            <FormControlLabel
-              value="outdated-equipment"
-              control={<Radio size="small" />}
-              label={
-                <Typography variant="body2">
-                  Outdated Equipment
-                </Typography>
-              }
-            />
-            <FormControlLabel
-              value="insufficient-training"
-              control={<Radio size="small" />}
-              label={
-                <Typography variant="body2">
-                  Insufficient Training
-                </Typography>
-              }
-            />
-          </RadioGroup>
-
-          {/* Question */}
-          <Typography variant="body2" sx={{ mb: 3, color: '#e74c3c' }}>
-            Is there anything else I can help you with?
-          </Typography>
-
-          {/* Bottom Alert */}
-          <Alert
-            severity="warning"
-            sx={{
-              mb: 3,
-              backgroundColor: '#ff6b35',
-              color: 'white',
-              '& .MuiAlert-icon': {
-                color: 'white'
-              }
-            }}
-          >
-            Let's go ahead with the equipment procurement.
-          </Alert>
-
-          {/* Response Section */}
-          <Box sx={{
-            display: 'flex',
-            gap: 2,
-            alignItems: 'flex-end',
-            mt: 3
-          }}>
-            <TextField
-              fullWidth
-              multiline
-              rows={1}
-              placeholder="Type a message..."
-              value={responseText}
-              onChange={(e) => setResponseText(e.target.value)}
-              variant="outlined"
-              size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '20px'
-                }
-              }}
-            />
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: '#ff6b35',
-                minWidth: 'auto',
-                px: 2,
-                py: 1,
-                borderRadius: '20px',
-                '&:hover': {
-                  backgroundColor: '#e55a2b'
-                }
-              }}
-            >
-              <Send />
-            </Button>
-          </Box>
-
-          {/* Action Buttons */}
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            mt: 3,
-            pt: 2,
-            borderTop: '1px solid #e9ecef'
-          }}>
-            <Button
-              variant="outlined"
-              sx={{
-                borderColor: '#6c757d',
-                color: '#6c757d',
-                textTransform: 'none',
-                borderRadius: '20px',
-                px: 3
-              }}
-            >
-              Approve
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: '#ff6b35',
-                textTransform: 'none',
-                borderRadius: '20px',
-                px: 3,
-                '&:hover': {
-                  backgroundColor: '#e55a2b'
-                }
-              }}
-            >
-              Investigate Further
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
-
-      {/* Additional Content Area */}
-      <Box sx={{
-        display: 'flex',
-        gap: 3,
-        mt: 3
-      }}>
-        {/* Placeholder for charts or other content */}
-        <Card sx={{ flex: 1, p: 3, minHeight: '300px' }}>
-          <Typography variant="h6" sx={{ mb: 2, color: '#2c3e50' }}>
-            Analytics Dashboard
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            KPI charts and analysis will be displayed here.
-          </Typography>
-        </Card>
-      </Box>
       </Box>
 
       {/* Push-based Chat Panel */}
@@ -332,7 +199,7 @@ export default function MainContent() {
           right: 0,
           height: '100vh',
           width: '400px',
-          backgroundColor: '#ff6b35',
+          backgroundColor: 'white',
           color: 'white',
           boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.15)',
           transform: isDrawerOpen ? 'translateX(0)' : 'translateX(100%)',
@@ -341,26 +208,42 @@ export default function MainContent() {
           overflow: 'auto'
         }}
       >
-        <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
           {/* Header */}
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             mb: 3,
+            backgroundColor: '#ff6b35',
           }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{
-                width: 40,
-                height: 40,
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <SmartToy sx={{ color: 'white' }} />
+            <Box sx={{ display: 'flex', alignItems: 'center',p:2, gap: 3, height: 100, }}>
+              <Box
+                sx={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  backgroundColor: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                <Box
+                  src={arbyGif}
+                  component="img"
+                  alt="Loading" sx={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}></Box>
+
               </Box>
+  
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                   ARBY
@@ -373,6 +256,7 @@ export default function MainContent() {
             <IconButton
               onClick={() => setIsDrawerOpen(false)}
               sx={{
+                p: 1,
                 color: 'white',
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.1)'
@@ -388,11 +272,13 @@ export default function MainContent() {
             severity="error"
             sx={{
               mb: 3,
+              display: 'flex',
+              justifyContent: 'center',
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              color: 'white',
+              color: 'tomato',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               '& .MuiAlert-icon': {
-                color: 'white'
+                color: 'red'
               }
             }}
           >
@@ -402,7 +288,7 @@ export default function MainContent() {
           {/* Chat Content Area */}
           <Box sx={{
             flex: 1,
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backgroundColor: 'rgba(138, 111, 111, 0.1)',
             borderRadius: 2,
             p: 2,
             mb: 2,
@@ -415,6 +301,7 @@ export default function MainContent() {
 
           {/* Bottom Action Buttons */}
           <Box sx={{
+             backgroundColor: 'rgba(138, 111, 111, 0.1)',
             display: 'flex',
             gap: 1,
             mb: 2
@@ -452,7 +339,8 @@ export default function MainContent() {
           <Box sx={{
             display: 'flex',
             gap: 1,
-            mb: 2
+            mb: 2,
+             backgroundColor: 'rgba(138, 111, 111, 0.1)'
           }}>
             <Button
               fullWidth
@@ -488,7 +376,8 @@ export default function MainContent() {
           <Box sx={{
             display: 'flex',
             gap: 1,
-            alignItems: 'flex-end'
+            alignItems: 'flex-end',
+             backgroundColor: 'rgba(138, 111, 111, 0.1)'
           }}>
             <TextField
               fullWidth
